@@ -41,6 +41,12 @@
     },
     {
       "src": "/",
+      "methods": ["POST"],
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/",
+      "methods": ["GET"],
       "dest": "/index.html"
     },
     {
