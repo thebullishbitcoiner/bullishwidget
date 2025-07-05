@@ -4,10 +4,6 @@
     {
       "src": "api/index.js",
       "use": "@vercel/node"
-    },
-    {
-      "src": "prod/**",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -21,12 +17,11 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/prod/$1"
+      "dest": "/$1"
     }
   ],
   "env": {
     "NODE_ENV": "production"
   },
-  "buildCommand": null,
-  "outputDirectory": null
+  "public": true
 } 
