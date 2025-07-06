@@ -97,15 +97,16 @@ Medium: ${fees.hourFee} sat/vB
 High: ${fees.fastestFee} sat/vB`;
 
     /*
-    Generate image with the fees data
+    Generate image with the fees data using Canvas
     */
     let feesImage = await ImagePainter(feesText);
 
     /*
-    If using an image generator, the result can be uploaded or used in a base64 string format
+    Use the generated image if available, otherwise fallback to placeholder
     */
     let SWImage = new Image(
-      `data:image/png;base64,${feesImage.toString("base64")}`
+      feesImage ? `data:image/png;base64,${feesImage.toString("base64")}` : 
+      "https://image.nostr.build/1690fdce710a9f0ddd6466ffe1edbfe76710615e1d0fd8d0b8118f1641953e28.jpg"
     );
 
     /*
