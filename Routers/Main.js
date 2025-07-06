@@ -19,11 +19,14 @@ router.post("/", async (req, res) => {
       Initialize a Smart Widget instance, a relays URL list is optional.
       Make sure to add your secret key in the .env file under the key of SECRET_KEY to ensure all widgets are signed under the same key.
     */
+    console.log('Initializing Smart Widget...');
     let SMART_WIDGET = new SW();
+    console.log('Smart Widget initialized');
 
     /*
      Smart widget components (Image, Input, Button).
      */
+    console.log('Creating Smart Widget components...');
     let SWImage = new Image(
       "https://image.nostr.build/1690fdce710a9f0ddd6466ffe1edbfe76710615e1d0fd8d0b8118f1641953e28.jpg"
     );
@@ -33,11 +36,14 @@ router.post("/", async (req, res) => {
       "post",
       getMainURL() + "/fees"
     );
+    console.log('Smart Widget components created');
 
     /*
     Smart widget component set, it accepts one image, one optional input, and a max of 6 buttons ordered respectively from 1 to 6.
     */
+    console.log('Creating Smart Widget component set...');
     let SWComp = new SWComponentsSet([SWImage, SWButton]);
+    console.log('Smart Widget component set created');
 
     /*
     An optional static Smart widget event identifier, but highly recommended on the root Smart widget.
@@ -48,11 +54,13 @@ router.post("/", async (req, res) => {
     /*
     To sign a Smart widget event, skip this step if wanting to publish the event.
     */
+    console.log('Signing Smart Widget event...');
     let signedEvent = await SMART_WIDGET.signEvent(
       SWComp,
       "Bitcoin Fees",
       identifier
     );
+    console.log('Smart Widget event signed');
 
     /*
     To publish a Smart widget event, skip this step if not wanting to publish the event.
@@ -60,8 +68,11 @@ router.post("/", async (req, res) => {
     the init() method is required before publishing the Smart widget.
     */
     let publishedEvent;
-    if (process.env.NODE_ENV === "production")
+    if (process.env.NODE_ENV === "production") {
+      console.log('Publishing Smart Widget event...');
       publishedEvent = await SMART_WIDGET.publish(SWComp, "Bitcoin Fees", identifier);
+      console.log('Smart Widget event published');
+    }
 
     /*
    Always return a valid Smart widget event.
@@ -85,7 +96,9 @@ router.post("/fees", async (req, res) => {
       Initialize a Smart Widget instance, a relays URL list is optional.
       Make sure to add your secret key in the .env file under the key of SECRET_KEY to ensure all widgets are signed under the same key.
     */
+    console.log('Initializing Smart Widget for fees...');
     let SMART_WIDGET = new SW();
+    console.log('Smart Widget initialized for fees');
 
     /*
     Fetch current Bitcoin fees from mempool.space
@@ -112,31 +125,39 @@ router.post("/fees", async (req, res) => {
     /*
     Use the generated image if available, otherwise fallback to placeholder
     */
+    console.log('Creating Smart Widget image component...');
     let SWImage = new Image(
       feesImage ? `data:image/png;base64,${feesImage.toString("base64")}` : 
       "https://image.nostr.build/1690fdce710a9f0ddd6466ffe1edbfe76710615e1d0fd8d0b8118f1641953e28.jpg"
     );
+    console.log('Smart Widget image component created');
 
     /*
      Smart widget components (Image, Input, Button).
      */
+    console.log('Creating Smart Widget button component...');
     let SWButton = new Button(
       1,
       "Refresh Fees 🔄",
       "post",
       getMainURL() + "/fees"
     );
+    console.log('Smart Widget button component created');
 
     /*
     Smart widget component set, it accepts one image, one optional input, and a max of 6 buttons ordered respectively from 1 to 6.
     */
+    console.log('Creating Smart Widget component set for fees...');
     let SWComp = new SWComponentsSet([SWImage, SWButton]);
+    console.log('Smart Widget component set created for fees');
 
     /*
     To sign a Smart widget event, the use of a static event identifier is not required if the event is not published.
     For best practice, make sure to publish only the root Smart widget.
     */
+    console.log('Signing Smart Widget event for fees...');
     let signed = await SMART_WIDGET.signEvent(SWComp, "Bitcoin Fees");
+    console.log('Smart Widget event signed for fees');
 
     /*
     Always return a valid Smart widget event.
