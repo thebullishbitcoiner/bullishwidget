@@ -7,17 +7,23 @@ const { createCanvas, loadImage } = require('canvas');
  */
 const genImage = async (htmlBoilerPlate) => {
   try {
+    console.log('Starting Canvas image generation...');
+    
     // Extract text from HTML (simple approach for now)
     const textMatch = htmlBoilerPlate.match(/<h2[^>]*>([^<]+)<\/h2>/);
     const text = textMatch ? textMatch[1] : 'Bitcoin Fees';
+    console.log('Extracted text:', text);
     
     // Create canvas
     const canvas = createCanvas(800, 600);
     const ctx = canvas.getContext('2d');
+    console.log('Canvas created successfully');
     
     // Load background image
+    console.log('Loading background image...');
     const bg = await loadImage('https://images.unsplash.com/photo-1674421268449-d68facc81eca');
     ctx.drawImage(bg, 0, 0, 800, 600);
+    console.log('Background image loaded and drawn');
     
     // Add dark overlay for better text readability
     ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
@@ -47,9 +53,15 @@ const genImage = async (htmlBoilerPlate) => {
       ctx.fillText(line.trim(), 400, startY + index * lineHeight);
     });
     
-    return canvas.toBuffer('image/png');
+    console.log('Text drawn successfully');
+    
+    const buffer = canvas.toBuffer('image/png');
+    console.log('Canvas buffer created, size:', buffer.length);
+    
+    return buffer;
   } catch (error) {
     console.error('Canvas generation error:', error);
+    console.error('Error stack:', error.stack);
     return null;
   }
 };

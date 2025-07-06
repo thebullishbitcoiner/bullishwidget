@@ -13,6 +13,8 @@ Add more endpoints to use them in a POST type buttons for more widget heirarchy.
 */
 router.post("/", async (req, res) => {
   try {
+    console.log('Root endpoint called');
+    
     /*
       Initialize a Smart Widget instance, a relays URL list is optional.
       Make sure to add your secret key in the .env file under the key of SECRET_KEY to ensure all widgets are signed under the same key.
@@ -64,10 +66,12 @@ router.post("/", async (req, res) => {
     /*
    Always return a valid Smart widget event.
    */
+    console.log('Root endpoint completed successfully');
     res.send(publishedEvent ? publishedEvent.event : signedEvent.event);
   } catch (err) {
-    console.log(err);
-    res.status(500).send({ message: "Server error" });
+    console.error('Root endpoint error:', err);
+    console.error('Error stack:', err.stack);
+    res.status(500).send({ message: "Server error", error: err.message });
   }
 });
 
@@ -75,6 +79,8 @@ router.post("/", async (req, res) => {
 
 router.post("/fees", async (req, res) => {
   try {
+    console.log('Fees endpoint called');
+    
     /*
       Initialize a Smart Widget instance, a relays URL list is optional.
       Make sure to add your secret key in the .env file under the key of SECRET_KEY to ensure all widgets are signed under the same key.
@@ -84,22 +90,23 @@ router.post("/fees", async (req, res) => {
     /*
     Fetch current Bitcoin fees from mempool.space
     */
+    console.log('Fetching Bitcoin fees...');
     const feesResponse = await axios.get("https://mempool.space/api/v1/fees/recommended");
     const fees = feesResponse.data;
+    console.log('Fees fetched:', fees);
 
     /*
-Create a text representation of the fees for the image
-*/
-    const feesText = `Low: ${fees.minimumFee} sat/vB
-
-Medium: ${fees.hourFee} sat/vB
-
-High: ${fees.fastestFee} sat/vB`;
+    Create a simple text representation of the fees
+    */
+    const feesText = `Low: ${fees.minimumFee} sat/vB\nMedium: ${fees.hourFee} sat/vB\nHigh: ${fees.fastestFee} sat/vB`;
+    console.log('Fees text:', feesText);
 
     /*
     Generate image with the fees data using Canvas
     */
+    console.log('Generating image...');
     let feesImage = await ImagePainter(feesText);
+    console.log('Image generated:', feesImage ? 'success' : 'failed');
 
     /*
     Use the generated image if available, otherwise fallback to placeholder
@@ -133,10 +140,12 @@ High: ${fees.fastestFee} sat/vB`;
     /*
     Always return a valid Smart widget event.
     */
+    console.log('Fees endpoint completed successfully');
     res.send(signed.event);
   } catch (err) {
-    console.log(err);
-    res.status(500).send({ message: "Server error" });
+    console.error('Fees endpoint error:', err);
+    console.error('Error stack:', err.stack);
+    res.status(500).send({ message: "Server error", error: err.message });
   }
 });
 
