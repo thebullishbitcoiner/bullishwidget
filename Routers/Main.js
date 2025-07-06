@@ -105,8 +105,9 @@ router.post("/fees", async (req, res) => {
     Generate image with the fees data using Canvas
     */
     console.log('Generating image...');
-    let feesImage = await ImagePainter(feesText);
-    console.log('Image generated:', feesImage ? 'success' : 'failed');
+    // Temporarily disable Canvas generation to test
+    let feesImage = null; // await ImagePainter(feesText);
+    console.log('Image generated: disabled for testing');
 
     /*
     Use the generated image if available, otherwise fallback to placeholder
@@ -146,6 +147,33 @@ router.post("/fees", async (req, res) => {
     console.error('Fees endpoint error:', err);
     console.error('Error stack:', err.stack);
     res.status(500).send({ message: "Server error", error: err.message });
+  }
+});
+
+// Simple test endpoint to verify basic functionality
+router.get("/test", async (req, res) => {
+  try {
+    console.log('Test endpoint called');
+    res.json({ 
+      message: "API is working", 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development'
+    });
+  } catch (err) {
+    console.error('Test endpoint error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Simple JSON endpoint to test fees data
+router.get("/fees-data", async (req, res) => {
+  try {
+    console.log('Fees data endpoint called');
+    const feesResponse = await axios.get("https://mempool.space/api/v1/fees/recommended");
+    res.json(feesResponse.data);
+  } catch (err) {
+    console.error('Fees data endpoint error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
